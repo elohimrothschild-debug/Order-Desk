@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Desk | Customer Order Management</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Order Desk home"><span class="brand-mark">OD</span><span>Order Desk<small>Customer operations</small></span></a>
+    <div class="topbar-right"><span class="local-badge"><i></i> Saved on this device</span><span class="avatar">OA</span></div>
+  </header>
+  <nav class="app-nav" aria-label="Main navigation">
+    <button class="nav-link active" data-view="orders">Orders</button>
+    <button class="nav-link" data-view="customers">Customers</button>
+    <button class="nav-link" data-view="inventory">Inventory</button>
+    <button class="nav-link" data-view="reports">Sales reports</button>
+  </nav>
+  <main class="shell">
+    <section id="view-orders" class="app-view">
+    <section class="welcome"><div><p class="eyebrow">OPERATIONS OVERVIEW</p><h1>Orders</h1><p class="subtle">A clear view of customer work, from request to completion.</p></div><button class="button primary" id="new-order">＋ <span>New order</span></button></section>
+    <section class="metrics" aria-label="Order summary">
+      <article class="metric"><span class="metric-label">Total orders</span><strong id="count-total">0</strong><span class="metric-foot">All recorded orders</span></article>
+      <article class="metric"><span class="metric-label">Pending</span><strong id="count-pending">0</strong><span class="metric-foot">Awaiting a start</span></article>
+      <article class="metric"><span class="metric-label">In progress</span><strong id="count-progress">0</strong><span class="metric-foot">Currently being handled</span></article>
+      <article class="metric"><span class="metric-label">Completed</span><strong id="count-completed">0</strong><span class="metric-foot">Finished orders</span></article>
+      <article class="metric attention-metric"><span class="metric-label">Requires attention</span><strong id="count-attention">0</strong><span class="metric-foot">Needs a human review</span></article>
+    </section>
+    <section id="notice-area" class="notice-area" aria-live="polite"></section>
+    <section class="panel orders-panel">
+      <div class="panel-heading"><div><h2>Order list</h2><p class="subtle">Review status, check warnings, and update customer work.</p></div><label class="search"><span>⌕</span><input id="search" type="search" placeholder="Search orders" aria-label="Search orders"></label></div>
+      <div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer & service</th><th>Order date</th><th>Last updated</th><th>Amount</th><th>Status</th><th>Review</th><th></th></tr></thead><tbody id="order-rows"></tbody></table></div>
+      <div id="empty-state" class="empty-state" hidden><div class="empty-icon">▤</div><strong>No orders found</strong><p>Try a different search, or add a new order.</p></div>
+      <div class="panel-bottom"><span id="order-count-label">0 orders</span><span>Changes save automatically in this browser</span></div>
+    </section>
+    <section class="lower-grid">
+      <section class="panel activity-panel"><div class="panel-heading compact"><div><h2>Recent activity</h2><p class="subtle">A record of order, customer, and inventory changes.</p></div></div><div id="activity-list" class="activity-list"></div></section>
+      <section class="panel draft-panel"><div class="panel-heading compact"><div><h2>Customer update draft</h2><p class="subtle">Review the facts before using this message.</p></div></div>
+        <label class="field-label" for="draft-order">Choose an order</label><select id="draft-order" class="control"></select>
+        <label class="field-label" for="draft-message">Draft message</label><textarea id="draft-message" class="control draft-text" rows="5" placeholder="Select an order to create a status-based draft."></textarea>
+        <div class="draft-note"><span>ⓘ</span><span>This only creates a draft. Nothing is sent. No completion date is promised.</span></div><button class="button secondary full" id="copy-draft">Copy draft</button><p id="copy-feedback" class="copy-feedback" aria-live="polite"></p>
+      </section>
+    </section>
+    </section>
+
+    <section id="view-customers" class="app-view" hidden>
+      <section class="welcome"><div><p class="eyebrow">CUSTOMER DIRECTORY</p><h1>Customers</h1><p class="subtle">Keep customer contact details together with their order history.</p></div><button class="button primary" id="new-customer">＋ <span>Add customer</span></button></section>
+      <section class="metrics customer-metrics" aria-label="Customer summary"><article class="metric"><span class="metric-label">Total customers</span><strong id="customer-count">0</strong><span class="metric-foot">Saved in this browser</span></article><article class="metric"><span class="metric-label">Customers with orders</span><strong id="customer-active-count">0</strong><span class="metric-foot">Linked to an order</span></article></section>
+      <section class="panel"><div class="panel-heading"><div><h2>Customer directory</h2><p class="subtle">Add or update contact details. Sample names are fictional.</p></div><label class="search"><span>⌕</span><input id="customer-search" type="search" placeholder="Search customers" aria-label="Search customers"></label></div>
+        <div class="table-wrap"><table><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Orders</th><th>Last order</th><th></th></tr></thead><tbody id="customer-rows"></tbody></table></div>
+        <div id="customer-empty" class="empty-state" hidden><div class="empty-icon">♙</div><strong>No customers found</strong><p>Add a customer to begin a directory.</p></div>
+      </section>
+    </section>
+
+    <section id="view-inventory" class="app-view" hidden>
+      <section class="welcome"><div><p class="eyebrow">STOCK OVERVIEW</p><h1>Inventory</h1><p class="subtle">Track supplies and flag items that need replenishing.</p></div><button class="button primary" id="new-item">＋ <span>Add item</span></button></section>
+      <section class="metrics inventory-metrics" aria-label="Inventory summary"><article class="metric"><span class="metric-label">Items tracked</span><strong id="inventory-count">0</strong><span class="metric-foot">Distinct stock items</span></article><article class="metric"><span class="metric-label">Low stock</span><strong id="low-stock-count">0</strong><span class="metric-foot">At or below reorder level</span></article><article class="metric"><span class="metric-label">Units on hand</span><strong id="unit-count">0</strong><span class="metric-foot">Across tracked items</span></article><article class="metric"><span class="metric-label">Stock value</span><strong id="stock-value">₱0</strong><span class="metric-foot">Based on recorded unit cost</span></article></section>
+      <section class="notice-area" id="inventory-notices" aria-live="polite"></section>
+      <section class="panel"><div class="panel-heading"><div><h2>Inventory list</h2><p class="subtle">Update stock quantities when goods are received or used.</p></div><label class="search"><span>⌕</span><input id="inventory-search" type="search" placeholder="Search inventory" aria-label="Search inventory"></label></div>
+        <div class="table-wrap"><table><thead><tr><th>Item</th><th>SKU</th><th>In stock</th><th>Reorder at</th><th>Unit cost</th><th>Stock status</th><th></th></tr></thead><tbody id="inventory-rows"></tbody></table></div>
+        <div id="inventory-empty" class="empty-state" hidden><div class="empty-icon">▦</div><strong>No inventory items found</strong><p>Add an item to start tracking stock.</p></div>
+      </section>
+    </section>
+
+    <section id="view-reports" class="app-view" hidden>
+      <section class="welcome"><div><p class="eyebrow">BUSINESS SNAPSHOT</p><h1>Sales reports</h1><p class="subtle">Sales are calculated from completed orders with an amount recorded.</p></div><span class="report-period">Updated from saved orders</span></section>
+      <section class="metrics report-metrics" aria-label="Sales summary"><article class="metric"><span class="metric-label">Total completed sales</span><strong id="sales-total">₱0</strong><span class="metric-foot">All recorded completed orders</span></article><article class="metric"><span class="metric-label">This month</span><strong id="sales-month">₱0</strong><span class="metric-foot">Completed this calendar month</span></article><article class="metric"><span class="metric-label">Completed orders</span><strong id="sales-order-count">0</strong><span class="metric-foot">With a recorded amount</span></article><article class="metric"><span class="metric-label">Average order value</span><strong id="sales-average">₱0</strong><span class="metric-foot">Across recorded completed orders</span></article></section>
+      <section class="panel"><div class="panel-heading"><div><h2>Monthly sales</h2><p class="subtle">Completed order values for the last six calendar months.</p></div></div><div class="table-wrap"><table><thead><tr><th>Month</th><th>Completed orders</th><th>Sales</th></tr></thead><tbody id="sales-rows"></tbody></table></div><div id="sales-empty" class="empty-state" hidden><strong>No completed orders with an amount yet</strong><p>Edit an order to record its sales amount, then mark it completed.</p></div></section>
+      <p class="report-note">Amounts are recorded in Philippine pesos (PHP). This report is a simple operational summary, not an accounting statement.</p>
+    </section>
+    <footer>Order Desk <span>•</span> Starter edition <span>•</span> Data is stored locally in this browser</footer>
+  </main>
+  <dialog id="order-dialog" class="dialog">
+    <form id="order-form" novalidate>
+      <div class="dialog-head"><div><p class="eyebrow">ORDER DETAILS</p><h2 id="dialog-title">Create order</h2></div><button type="button" class="icon-button" id="close-dialog" aria-label="Close">×</button></div>
+      <p class="dialog-intro">Enter the customer and service details. Fields marked * are required.</p>
+      <div id="form-errors" class="form-errors" role="alert" hidden></div>
+      <input type="hidden" id="form-id">
+      <div class="form-grid">
+        <label class="field"><span>Customer name *</span><select id="customer-name" class="control" required></select></label>
+        <label class="field"><span>Service requested *</span><input id="service" class="control" maxlength="120" autocomplete="off" placeholder="e.g. Website content review" required></label>
+        <label class="field"><span>Order date *</span><input id="order-date" class="control" type="date" required></label>
+        <label class="field"><span>Status *</span><select id="status" class="control" required></select></label>
+        <label class="field"><span>Sales amount <small>(optional; PHP)</small></span><input id="order-amount" class="control" type="number" min="0" step="0.01" placeholder="0.00"></label>
+        <label class="field wide"><span>Verified deadline <small>(optional; only if confirmed)</small></span><input id="deadline" class="control" type="date"><small>Leave blank unless a deadline has been confirmed.</small></label>
+        <label class="field wide"><span>Internal note <small>(optional)</small></span><textarea id="internal-note" class="control" rows="3" maxlength="400" placeholder="Notes for the operations team"></textarea></label>
+      </div>
+      <div class="dialog-actions"><button type="button" class="button secondary" id="cancel-dialog">Cancel</button><button type="submit" class="button primary">Save order</button></div>
+    </form>
+  </dialog>
+  <dialog id="customer-dialog" class="dialog">
+    <form id="customer-form" novalidate><div class="dialog-head"><div><p class="eyebrow">CUSTOMER DETAILS</p><h2 id="customer-dialog-title">Add customer</h2></div><button type="button" class="icon-button" data-close="customer-dialog" aria-label="Close">×</button></div>
+      <p class="dialog-intro">Contact details are optional. Use fictional details for demonstrations.</p><div id="customer-errors" class="form-errors" role="alert" hidden></div><input id="customer-edit-id" type="hidden">
+      <div class="form-grid"><label class="field wide"><span>Customer name *</span><input id="directory-name" class="control" maxlength="80" required></label><label class="field"><span>Email <small>(optional)</small></span><input id="directory-email" class="control" type="email" maxlength="120"></label><label class="field"><span>Phone <small>(optional)</small></span><input id="directory-phone" class="control" type="tel" maxlength="30"></label></div>
+      <div class="dialog-actions"><button type="button" class="button secondary" data-close="customer-dialog">Cancel</button><button type="submit" class="button primary">Save customer</button></div>
+    </form>
+  </dialog>
+  <dialog id="inventory-dialog" class="dialog">
+    <form id="inventory-form" novalidate><div class="dialog-head"><div><p class="eyebrow">STOCK ITEM</p><h2 id="inventory-dialog-title">Add inventory item</h2></div><button type="button" class="icon-button" data-close="inventory-dialog" aria-label="Close">×</button></div>
+      <p class="dialog-intro">Enter the item and current stock. Low stock is flagged at the reorder level.</p><div id="inventory-errors" class="form-errors" role="alert" hidden></div><input id="inventory-edit-id" type="hidden">
+      <div class="form-grid"><label class="field"><span>Item name *</span><input id="item-name" class="control" maxlength="100" required></label><label class="field"><span>SKU <small>(optional)</small></span><input id="item-sku" class="control" maxlength="40"></label><label class="field"><span>Quantity in stock *</span><input id="item-quantity" class="control" type="number" min="0" step="1" required></label><label class="field"><span>Reorder level *</span><input id="item-reorder" class="control" type="number" min="0" step="1" required></label><label class="field wide"><span>Unit cost <small>(optional; PHP)</small></span><input id="item-cost" class="control" type="number" min="0" step="0.01" placeholder="0.00"></label></div>
+      <div class="dialog-actions"><button type="button" class="button secondary" data-close="inventory-dialog">Cancel</button><button type="submit" class="button primary">Save item</button></div>
+    </form>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
